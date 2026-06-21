@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id_user    String   @id  @id @db.VarChar(5) // Format custom: U01
+  nama       String
+  email      String   @unique
+  password   String
+  no_hp      String
+  role       String   @default("USER")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  
+  peminjaman Peminjaman[]
+}
+
+model Lapangan {
+  id_lapangan    String   @id @db.VarChar(5) // Format custom: LP01
+  nama_lapangan  String
+  jenis_lapangan String  
+  harga_perjam   Int
+  
+  jadwal         Jadwal[]
+  peminjaman     Peminjaman[] 
+}
+
+model Jadwal {
+  id_jadwal    String   @id @db.VarChar(5) // Format custom: JD01
+  id_lapangan  String   @db.VarChar(5)     // Kolom penampung foreign key (Tadi ini yang hilang!)
+  tanggal      DateTime
+  hari         String   
+  jam_mulai    String   
+  jam_selesai  String 
+  status       String   @default("TERSEDIA") 
+  
+  lapangan     Lapangan     @relation(fields: [id_lapangan], references: [id_lapangan])
+  peminjaman   Peminjaman[]
+}
+
+model Peminjaman {
+  id_pinjam     String   @id @db.VarChar(5) // Format custom: PM01
+  id_user       String
+  id_lapangan   String   @db.VarChar(5)
+  id_jadwal     String   @db.VarChar(5)
+  tgl_pinjam    DateTime @default(now()) 
+  tgl_main      DateTime 
+  total_harga   Int
+  status_pinjam String   @default("PENDING") 
+  
+  user          User       @relation(fields: [id_user], references: [id_user])
+  lapangan      Lapangan   @relation(fields: [id_lapangan], references: [id_lapangan])
+  jadwal        Jadwal     @relation(fields: [id_jadwal], references: [id_jadwal])
+  pembayaran    Pembayaran[]
+}
+
+model Pembayaran {
+  id_bayar     String   @id @db.VarChar(5) // Format custom: BY01
+  id_pinjam    String   @db.VarChar(5)
+  tgl_bayar    DateTime @default(now())
+  metode_bayar String   
+  total_bayar  Int
+  status_bayar String   @default("BELUM_BAYAR") 
+  
+  peminjaman   Peminjaman @relation(fields: [id_pinjam], references: [id_pinjam])
+}
