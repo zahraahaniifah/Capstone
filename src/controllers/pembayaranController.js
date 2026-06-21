@@ -1,33 +1,28 @@
 const prisma = require('../lib/prisma.js');
 const { z } = require('zod'); 
 
-// KITA UBAH: id_pinjam sekarang string biasa (format PM01), bukan UUID lagi!
 const konfirmasiSchema = z.object({
   id_pinjam: z.string().min(2, { message: "ID Peminjaman tidak valid" })
 });
 
-// KITA UBAH: id_user sekarang string biasa (format U01), bukan UUID lagi!
 const paramUserSchema = z.string().min(2, { message: "ID User tidak valid" });
 
-// 1. Fungsi Konfirmasi Pembayaran
 const konfirmasiPembayaran = async (req, res) => {
   try {
     const dataValid = konfirmasiSchema.parse(req.body);
 
-    // Cek apakah data peminjaman ada
     const peminjaman = await prisma.peminjaman.findUnique({
-      where: { id_pinjam: dataValid.id_pinjam } // Disesuaikan ke id_pinjam
+      where: { id_pinjam: dataValid.id_pinjam } 
     });
 
     if (!peminjaman) {
       return res.status(404).json({ message: "Data booking tidak ditemukan!" });
     }
 
-    // Update status di tabel peminjaman menjadi lunas
     const bookingLunas = await prisma.peminjaman.update({
       where: { id_pinjam: dataValid.id_pinjam },
       data: {
-        status_pinjam: "SUDAH_BAYAR" // Menyesuaikan enum/string status di skema kamu
+        status_pinjam: "SUDAH_BAYAR" 
       }
     });
 
@@ -47,7 +42,6 @@ const konfirmasiPembayaran = async (req, res) => {
   }
 };
 
-// 2. Fungsi Mengambil Riwayat Booking Per User
 const getRiwayatUser = async (req, res) => {
   try {
     const idUserValid = paramUserSchema.parse(req.params.id_user);

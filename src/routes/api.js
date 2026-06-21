@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-// Hubungkan ke Controller masing-masing
 const authController = require('../controllers/authController.js');
 const lapanganController = require('../controllers/lapanganController.js');
 const jadwalController = require('../controllers/jadwalController.js');
