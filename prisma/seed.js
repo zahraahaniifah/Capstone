@@ -1,93 +1,63 @@
-const { PrismaClient } = require('../src/generated/prisma');
-const bcrypt = require('bcrypt');
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Sedang membersihkan database lama...');
+  console.log('Memulai proses seeding data...');
 
-  await prisma.peminjaman.deleteMany({});
   await prisma.jadwal.deleteMany({});
   await prisma.lapangan.deleteMany({});
-  await prisma.user.deleteMany({});
 
-  console.log('Mulai melakukan seeding data realistis...');
-
-  const salt = await bcrypt.genSalt(10);
-  const hashPassword = await bcrypt.hash('password123', salt);
-
-  const admin = await prisma.user.create({
+  // 2. Tambah Data Lapangan Tiruan
+  const lapanganFutsal = await prisma.lapangan.create({
     data: {
-      nama: 'Admin Lapangan Futsal',
-      email: 'admin@futsal.com',
-      password: hashPassword,
-      no_hp: '081122334455',
-      role: 'ADMIN'
-    }
-  });
-
-  const userBiasa = await prisma.user.create({
-    data: {
-      nama: 'Caca',
-      email: 'caca@gmail.com',
-      password: hashPassword,
-      no_hp: '081234567890',
-      role: 'USER'
-    }
-  });
-
-  const lapanganA = await prisma.lapangan.create({
-    data: {
-      nama_lapangan: 'Futsal Arena A (Rumput Sintetis)',
+      nama_lapangan: 'Lapangan Futsal A',
       jenis_lapangan: 'Futsal',
-      harga_perjam: 150000
-    }
+      harga_per_jam: 120000,
+      deskripsi: 'Lapangan futsal dengan rumput sintetis standar internasional.',
+    },
   });
 
-  const lapanganB = await prisma.lapangan.create({
+  const lapanganBadminton = await prisma.lapangan.create({
     data: {
-      nama_lapangan: 'Basket A (Vynil)',
-      jenis_lapangan: 'Basket',
-      harga_perjam: 175000
-    }
+      nama_lapangan: 'Lapangan Badminton A',
+      jenis_lapangan: 'Badminton',
+      harga_per_jam: 50000,
+      deskripsi: 'Lapangan badminton indoor dengan lantai karpet vinyl.',
+    },
   });
 
-  const tanggalHariIni = new Date('2026-06-17');
+  console.log('✅ Data lapangan berhasil dibuat.');
 
-  await prisma.jadwal.createMany({
-    data: [
-      {
-        id_lapangan: lapanganA.id_lapangan,
-        tanggal: tanggalHariIni,
-        hari: 'Rabu',
-        jam_mulai: '16:00',
-        jam_selesai: '17:00',
-        status: 'TERSEDIA'
-      },
-      {
-        id_lapangan: lapanganA.id_lapangan,
-        tanggal: tanggalHariIni,
-        hari: 'Rabu',
-        jam_mulai: '19:00',
-        jam_selesai: '20:00',
-        status: 'TERSEDIA'
-      },
-      {
-        id_lapangan: lapanganB.id_lapangan,
-        tanggal: tanggalHariIni,
-        hari: 'Rabu',
-        jam_mulai: '20:00',
-        jam_selesai: '21:00',
-        status: 'TERSEDIA'
-      }
-    ]
-  });
+  // 3. Tambah Slot Jadwal Tiruan untuk Tanggal Hari Ini (26 Juni 2026)
+  const tanggalHariIni = '2026-06-26';
 
-  console.log('Seeding data sukses besar!');
+  const slotJadwal = [
+    { id_lapangan: lapanganFutsal.id, jam_mulai: '08:00', jam_selesai: '09:00' },
+    { id_lapangan: lapanganFutsal.id, jam_mulai: '09:00', jam_selesai: '10:00' },
+    { id_lapangan: lapanganFutsal.id, jam_mulai: '19:00', jam_selesai: '20:00' },
+    { id_lapangan: lapanganBadminton.id, jam_mulai: '08:00', jam_selesai: '09:00' },
+    { id_lapangan: lapanganBadminton.id, jam_mulai: '16:00', jam_selesai: '17:00' },
+  ];
+
+  for (const jadwal of slotJadwal) {
+    await prisma.jadwal.create({
+      data: {
+        lapanganId: jadwal.id_lapangan, // Sesuaikan dengan nama field relasi di schema.prisma kamu
+        tanggal: tanggalHariIni,
+        jam_mulai: jadwal.jam_mulai,
+        jam_selesai: jadwal.jam_selesai,
+        status: 'tersedia',
+      },
+    });
+  }
+
+  console.log('✅ Data slot jadwal berhasil dibuat.');
+  console.log('Proses seeding selesai dengan sukses! 🎉');
 }
 
 main()
   .catch((e) => {
-    console.error('Ada error pas seeding:', e);
+    console.error('Eror saat proses seeding:', e);
     process.exit(1);
   })
   .finally(async () => {

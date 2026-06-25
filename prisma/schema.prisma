@@ -12,7 +12,7 @@ datasource db {
 }
 
 model User {
-  id_user    String   @id  @id @db.VarChar(5) // Format custom: U01
+  id_user    String   @id @db.VarChar(5) // Format custom: U01
   nama       String
   email      String   @unique
   password   String

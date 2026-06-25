@@ -17,7 +17,7 @@ const apiRoutes = require('./routes/api.js');
 app.use('/api', apiRoutes);
 
 app.get('/', (req, res) => {
-  res.senSd('Server Backend Capstone Neo Siap Tempur!');
+  res.send('Server Backend Capstone Neo Siap Tempur!');
 });
 
 app.listen(PORT, () => {
