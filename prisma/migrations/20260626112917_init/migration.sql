@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE `User` (
-    `id_user` VARCHAR(191) NOT NULL,
+    `id_user` VARCHAR(5) NOT NULL,
     `nama` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE `User` (
 
 -- CreateTable
 CREATE TABLE `Lapangan` (
-    `id_lapangan` VARCHAR(191) NOT NULL,
+    `id_lapangan` VARCHAR(5) NOT NULL,
     `nama_lapangan` VARCHAR(191) NOT NULL,
     `jenis_lapangan` VARCHAR(191) NOT NULL,
     `harga_perjam` INTEGER NOT NULL,
@@ -25,8 +25,8 @@ CREATE TABLE `Lapangan` (
 
 -- CreateTable
 CREATE TABLE `Jadwal` (
-    `id_jadwal` VARCHAR(191) NOT NULL,
-    `id_lapangan` VARCHAR(191) NOT NULL,
+    `id_jadwal` VARCHAR(5) NOT NULL,
+    `id_lapangan` VARCHAR(5) NOT NULL,
     `tanggal` DATETIME(3) NOT NULL,
     `hari` VARCHAR(191) NOT NULL,
     `jam_mulai` VARCHAR(191) NOT NULL,
@@ -38,10 +38,10 @@ CREATE TABLE `Jadwal` (
 
 -- CreateTable
 CREATE TABLE `Peminjaman` (
-    `id_pinjam` VARCHAR(191) NOT NULL,
+    `id_pinjam` VARCHAR(5) NOT NULL,
     `id_user` VARCHAR(191) NOT NULL,
-    `id_lapangan` VARCHAR(191) NOT NULL,
-    `id_jadwal` VARCHAR(191) NOT NULL,
+    `id_lapangan` VARCHAR(5) NOT NULL,
+    `id_jadwal` VARCHAR(5) NOT NULL,
     `tgl_pinjam` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `tgl_main` DATETIME(3) NOT NULL,
     `total_harga` INTEGER NOT NULL,
@@ -52,8 +52,8 @@ CREATE TABLE `Peminjaman` (
 
 -- CreateTable
 CREATE TABLE `Pembayaran` (
-    `id_bayar` VARCHAR(191) NOT NULL,
-    `id_pinjam` VARCHAR(191) NOT NULL,
+    `id_bayar` VARCHAR(5) NOT NULL,
+    `id_pinjam` VARCHAR(5) NOT NULL,
     `tgl_bayar` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `metode_bayar` VARCHAR(191) NOT NULL,
     `total_bayar` INTEGER NOT NULL,

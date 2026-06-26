@@ -55,7 +55,7 @@ const getRiwayatUser = async (req, res) => {
           }
         }
       },
-      orderBy: { created_at: 'desc' }
+      orderBy: { tgl_pinjam: 'desc' }
     });
 
     res.status(200).json(riwayat);

@@ -3,10 +3,15 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log('Memulai proses seeding data...');
+  console.log('Membersihkan data transaksi lama...');
+  await prisma.pembayaran.deleteMany({});
+  await prisma.peminjaman.deleteMany({});
 
+  console.log('Membersihkan data jadwal dan lapangan lama...');
   await prisma.jadwal.deleteMany({});
   await prisma.lapangan.deleteMany({});
 
+  console.log('Membuat data lapangan baru...');
   const lapanganFutsal = await prisma.lapangan.create({
     data: {
       id_lapangan: "LP01",
@@ -25,8 +30,10 @@ async function main() {
     },
   });
 
-  console.log('✅ Data lapangan berhasil dibuat.');
+  console.log('Data lapangan berhasil dibuat!.');
 
+  // 4. SEEDING DATA JADWAL
+  console.log('Membuat data slot jadwal baru...');
   const slotJadwal = [
     { id_lapangan: lapanganFutsal.id_lapangan, jam_mulai: '08:00', jam_selesai: '09:00' },
     { id_lapangan: lapanganFutsal.id_lapangan, jam_mulai: '09:00', jam_selesai: '10:00' },
@@ -45,7 +52,7 @@ async function main() {
         id_jadwal: idJadwalCustom,                 
         id_lapangan: jadwal.id_lapangan,           
         tanggal: new Date('2026-06-26'),           
-        hari: 'Jumat',                            
+        hari: 'Jumat',                                                        
         jam_mulai: jadwal.jam_mulai,
         jam_selesai: jadwal.jam_selesai,
         status: 'TERSEDIA',                        
