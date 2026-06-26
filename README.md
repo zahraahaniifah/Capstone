@@ -12,14 +12,17 @@ Proyek ini adalah RESTful API untuk sistem manajemen dan peminjaman fasilitas pu
 ## Link Live Deployment
 - **URL API / Swagger UI:** `https://capstone-production-f4f6.up.railway.app/api-docs`
 
-## Fitur & Endpoint Utama (Minimal 5 Endpoint)
-1. `GET /api/lapangans` - Menampilkan daftar lapangan olahraga publik yang tersedia.
-2. `GET /api/bookings/ketersediaan` - Mengecek jadwal kosong lapangan berdasarkan tanggal agar tidak bentrok.
-3. `POST /api/bookings` - Melakukan booking lapangan (Terproteksi Middleware JWT).
-4. `GET /api/bookings/me` - Pengguna melihat riwayat booking milik mereka sendiri.
-5. `PATCH /api/admin/bookings/:id` - Mengubah status transaksi booking (Khusus role Admin).
+## Fitur & Endpoint Utama
+1. `POST /api/auth/register` - Untuk melakukan registrasi user baru.
+2. `POST /api//auth/login` - Untuk login user.
+3. `GET /api/lapangan` - Untuk mengambil semua daftar lapangan.
+4. `POST /api/lapangan` - Untuk membooking lapangan baru
+5. `POST /api/jadwal` - Untuk membooking jadwal baru.
+6. `GET /api/jadwal/lapangan/(id)` -Untuk mencari jadwal per lapangan
+7. `POST /api/booking` -Untuk membuat booking baru
+8. `GET /api/pembayaran/riwayat/(id)` -Untuk menampilkan riwayat user
+9. `POST /api/pembayaran/konfirmasi` -Untuk konfirmasi booking
 
----
 
 ## Cara Menjalankan Proyek Secara Lokal (Local Setup)
 
